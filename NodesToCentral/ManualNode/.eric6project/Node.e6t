@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Tasks SYSTEM "Tasks-6.0.dtd">
+<!-- Pymakr tasks file for project Node -->
+<!-- Saved: 2017-01-26, 15:21:04 -->
+<Tasks version="6.0">
+  <ProjectScanFilter></ProjectScanFilter>
+  <Task priority="1" completed="False" type="3" uid="{e831d776-96af-44dd-be24-8a0aa6df9ce7}">
+    <Summary>NOTE: For this demo the device does an infinite loop for while waiting the response. Introduce a max_time_waiting for you application</Summary>
+    <Description></Description>
+    <Created>2017-01-26, 15:21:01</Created>
+    <Resource>
+      <Filename>main.py</Filename>
+      <Linenumber>45</Linenumber>
+    </Resource>
+  </Task>
+</Tasks>
