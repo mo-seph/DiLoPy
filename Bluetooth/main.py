@@ -55,7 +55,6 @@ def parse(data):
     return { "sensors":sense,  "device":setup}
 
 def scan(scan_time = -1):
-    bluetooth.stop_scan()
     bluetooth.start_scan(scan_time)
     while bluetooth.isscanning():
         adv = bluetooth.get_adv()
@@ -67,6 +66,7 @@ def scan(scan_time = -1):
                     #print("Got an Estimote packet")
                     if(data[2] == 0x01 ): # Nearable protocol version
                         #print("...and its a Nearable")
+                        bluetooth.stop_scan()
                         return data
             except Exception as e:
                 print(e)
@@ -77,7 +77,7 @@ def stream_data():
     while(True):
         data = scan(1)
         if( data ):
-            print(parse(scan())["sensors"])
+            print(parse(data))["sensors"])
         else:
             print('.')
         
