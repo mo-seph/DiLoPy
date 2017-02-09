@@ -1,8 +1,9 @@
-import os
+
 import socket
 import time
 import struct
 from network import LoRa
+from binascii import hexlify
 
 import pycom # we need this module to control the LED
 pycom.heartbeat(False) # disable the blue blinking
@@ -78,8 +79,9 @@ while(True):
     msg = "Hello!"
     print("Device %X sending message: %s" % (DEVICE_ID, msg))
     pkg = struct.pack(_LORA_PKG_FORMAT % len(msg), PROTOCOL_ID, DEVICE_ID, len(msg), msg)
-    print("Sent OK!")
+    print(hexlify(pkg))
     lora_sock.send(pkg)
+    print("Sent OK!")
     if( WAIT_FOR_ACK ):
         wait_for_response()
     else:

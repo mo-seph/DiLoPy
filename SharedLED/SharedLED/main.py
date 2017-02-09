@@ -22,12 +22,11 @@ _LORA_LED_FORMAT = "BBBB"
 
 adc = ADC(0)
 adc_c = adc.channel(pin='P13')
-adc_c()
-adc_c.value()
 
 # Open a Lora Socket, use tx_iq to avoid listening to our own messages
 lora = LoRa(mode=LoRa.LORA, tx_iq=False,  rx_iq=False  )
 lora_sock = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
+lora_sock.setblocking(False)
 print("Node LoRa OK")
 
 
@@ -45,9 +44,10 @@ def setled(red, green, blue):
   pycom.rgbled(0x000000 + (red << 16) +  (green << 8) +  blue)
   
 def send_knob(value):
-    print("Seinding value %d to %d" % (value, TARGET_ID))
+    print("Sending value %d to %d" % (value, TARGET_ID))
     pkg = struct.pack(_LORA_LED_FORMAT, PROTOCOL_ID, DEVICE_ID, TARGET_ID, value)
     lora_sock.send(pkg)
+    time.sleep(0.1)
 
 
 old_knob = 0
@@ -58,7 +58,7 @@ while(True):
         send_knob(knob)
         old_knob = knob
     check_for_input();
-    time.sleep(0.01)
+    time.sleep(0.02)
     #if( WAIT_FOR_ACK ):
     #    wait_for_response()
     #else:
