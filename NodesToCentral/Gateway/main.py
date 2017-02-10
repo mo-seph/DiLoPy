@@ -32,17 +32,16 @@ print("Gateway LoRa good")
 
 while (True):
     recv_pkg = lora_sock.recv(512) #512 is the max amount to receive
-    print("Got packet: %s" % (hexlify(recv_pkg)))
     if (len(recv_pkg) > 2):        #Check packet is valid, and has some data
         pycom.rgbled(RCV_COLOR)     #LED goes blue
-        recv_pkg_len = recv_pkg[2] #How much data is in the packet?
-        print("Got length: %d" % (recv_pkg_len))
-        # Unpack the packet to get the device ID, data length and data as a string
+        recv_pkg_len = recv_pkg[2]  #3rd byte says how much data is in the packet?
+        print("Got packet %s (length: %d)" % (hexlify(recv_pkg), recv_pkg_len))
         try:
+            # Unpack the packet to get the protocol ID, device ID, data length and data as a string
             proto_id,  device_id, pkg_len, msg = struct.unpack(_LORA_PKG_FORMAT % recv_pkg_len, recv_pkg)
             if( proto_id == PROTOCOL_ID ):
                 #Print out the data
-                print('Device: %02x - Pkg:  %s' % (device_id, msg))
+                print('Dev %02x says "%s"' % (device_id, msg))
 
                 #Send back an acknowledgement
                 ack_pkg = struct.pack(_LORA_PKG_ACK_FORMAT, PROTOCOL_ID,  device_id, 1, 200)
@@ -50,6 +49,6 @@ while (True):
                 time.sleep(0.05)
                 pycom.rgbled(WAIT_COLOR) # turn LED back to yellow
             else:
-                print("Unknown protocol: %X" % (proto_id) )
+                print("Unknown protocol: %02x" % (proto_id) )
         except Exception as e:
             print("Bad packet: %s" % (str(e)))
